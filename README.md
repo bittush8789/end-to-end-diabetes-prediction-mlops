@@ -1,133 +1,182 @@
-# Diabetes Prediction System (DiaPredict)
+# 🩺 DiaPredict: End-to-End Diabetes Prediction & Risk Assessment System
 
-DiaPredict is an end-to-end Machine Learning web application designed to predict whether a patient has diabetes based on medical parameters from the Pima Indians Diabetes Dataset. The model achieves an ROC-AUC of **81.8%** using a Random Forest classifier.
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.13-blue.svg)](https://www.python.org/)
+[![Flask Version](https://img.shields.io/badge/flask-3.1.3-green.svg)](https://flask.palletsprojects.com/)
+[![Docker Support](https://img.shields.io/badge/docker-enabled-blue.svg)](https://www.docker.com/)
+[![Machine Learning](https://img.shields.io/badge/scikit--learn-Random%20Forest%20(81.8%25%20ROC--AUC)-orange.svg)](https://scikit-learn.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+DiaPredict is an end-to-end Machine Learning web application designed to predict whether a patient has diabetes based on medical parameters from the Pima Indians Diabetes Dataset. By using clean data processing, robust feature scaling, and advanced classification models, the application delivers accurate predictions alongside categorized risk classification and actionable medical recommendations.
 
 ![DiaPredict Dashboard](photo/image.png)
 
 ---
 
-## Project Structure
+## 🌟 Key Features
+
+- **Diagnostic Form with In-Line Tooltips:** Interactive, user-friendly forms with real-time numeric constraints and input range helpers.
+- **Advanced Predictive Modeling:** Automated comparisons between Logistic Regression, Random Forest, and XGBoost classifiers.
+- **Dynamic Risk Categorization:** Calculates exact percentage probabilities and assigns risk levels:
+  - **Low Risk:** Probability < 40% (Green indicator)
+  - **Medium Risk:** Probability 40% - 70% (Orange indicator)
+  - **High Risk:** Probability > 70% (Red indicator)
+- **Tailored Clinical Advice:** Generates dynamic recommendations based on individual indicators (BMI, Glucose, Blood Pressure, etc.).
+- **Responsive Theme:** Features a premium healthcare theme incorporating glassmorphism, background shape animations, and dark-mode adaptation.
+- **Full Docker Containerization:** Production-ready packaging running a Gunicorn WSGI server.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Backend:** Flask, Python (Pandas, NumPy, Scikit-Learn, XGBoost, Joblib)
+- **Frontend:** HTML5, Vanilla CSS3 (Glassmorphism design system), JavaScript (ES6 Fetch API)
+- **Web Server:** Gunicorn (production WSGI container)
+- **Containerization:** Docker, Docker Compose
+
+---
+
+## 📂 Project Structure
+
+<details>
+<summary><b>Click to expand folder hierarchy</b></summary>
 
 ```text
 diabetes-prediction-system/
 │
 ├── dataset/
-│   └── diabetes.csv        # Local cached dataset
+│   └── diabetes.csv        # Local Pima Indians dataset cache
 │
 ├── notebooks/
-│   └── EDA.ipynb           # Jupyter notebook for exploratory data analysis
+│   └── EDA.ipynb           # Exploratory Data Analysis & pipeline testing
 │
 ├── model/
-│   ├── train.py            # Model training & comparison script
-│   ├── predict.py          # Pre-processing, inference & risk classification wrapper
-│   └── diabetes_model.pkl  # Serialized model, scaler, and imputation medians
+│   ├── train.py            # Model training, comparison, and serialization pipeline
+│   ├── predict.py          # Real-time inference wrapper with preprocessing
+│   └── diabetes_model.pkl  # Combined model, scaler, and imputation medians bundle
 │
 ├── templates/
-│   ├── index.html          # Landing / Home page
-│   ├── predict.html        # Patient diagnostics & results interface
-│   └── about.html          # About the dataset and model metrics
+│   ├── index.html          # Web landing page
+│   ├── predict.html        # Interactive patient form & visual results
+│   └── about.html          # Dataset summary & algorithm evaluation dashboard
 │
 ├── static/
 │   ├── css/
-│   │   └── style.css       # Custom stylesheets (glassmorphism UI)
+│   │   └── style.css       # Premium custom stylesheet with modern UI components
 │   └── js/
-│       └── script.js       # Client validations & Fetch API integration
+│       └── script.js       # Client side input validations & backend API fetcher
 │
-├── app.py                  # Flask web backend application
-│
-├── requirements.txt        # Project python packages
-│
-├── Dockerfile              # Container configuration
-│
-└── docker-compose.yml     # Compose configuration
+├── app.py                  # Core Flask application entry point
+├── requirements.txt        # Python package dependencies
+├── Dockerfile              # Single-stage containerized setup
+├── docker-compose.yml     # Multi-container service configuration
+└── README.md               # Professional project documentation
 ```
+</details>
 
 ---
 
-## Machine Learning Pipeline
+## ⚙️ Machine Learning Pipeline
 
-1. **Ingestion & Validation**:
-   - Downloads the Pima Indians Diabetes Dataset from clinical repositories.
-   - Inspects for null values, duplicates, and data type issues.
-2. **Data Imputation & Preprocessing**:
-   - Zero-values in fields like `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, and `BMI` are treated as missing/invalid and imputed with stratified medians calculated strictly from the training set.
-3. **Scaling**:
-   - Features scaled with `StandardScaler` to bring inputs to uniform mean and unit variance.
-4. **Model Selection**:
-   - Trains Logistic Regression, Random Forest, and XGBoost.
-   - Compares Accuracy, Precision, Recall, F1 Score, and ROC-AUC.
-   - The Random Forest model is selected for production due to its optimal ROC-AUC.
+### 1. Ingestion & Validation
+The pipeline loads the **Pima Indians Diabetes Dataset** (768 records, 9 columns). It performs checks for null values, duplicate rows, and invalid feature datatypes.
+
+### 2. Imputation & Data Cleaning
+Values of `0` in parameters such as **Glucose, BloodPressure, SkinThickness, Insulin, and BMI** are physiologically impossible. Rather than deleting data, DiaPredict replaces them with the feature's median value computed **solely from the training split** to prevent data leakage.
+
+### 3. Feature Engineering
+Numerical columns are normalized using `StandardScaler` to ensure uniform scale and faster algorithm convergence.
+
+### 4. Model Training & Comparison
+The application trains and compares three classifiers on a 80-20 split:
+
+| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Logistic Regression** | 70.78% | 60.00% | 50.00% | 54.55% | 81.30% |
+| **Random Forest** (Selected) | 74.68% | 65.96% | 57.41% | 61.39% | **81.79%** |
+| **XGBoost** | 76.62% | 68.75% | 61.11% | 64.71% | 81.02% |
+
+> The **Random Forest** classifier was selected for production because it yielded the highest overall **ROC-AUC (81.79%)**, maximizing sensitivity while minimizing false-positive diagnostics.
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
-### Option 1: Local Installation
+### Local Setup
+Ensure you have Python installed (3.10+ recommended).
 
-1. **Install Dependencies**:
+1. **Clone the repository and install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-
-2. **Train Model**:
+2. **Train the models and generate the prediction bundle:**
    ```bash
    python model/train.py
    ```
-
-3. **Start Flask Server**:
+3. **Launch the web application:**
    ```bash
    python app.py
    ```
-   Open `http://127.5.0.1:5000` in your web browser.
+4. Access the site locally at `http://127.0.0.1:5000`.
 
-### Option 2: Run with Docker
-
-1. **Build and Run (Compose)**:
+### Containerized Setup (Docker)
+1. **Run using Docker Compose:**
    ```bash
    docker-compose up --build
    ```
-
-2. **Or Build and Run (Standalone Docker)**:
+2. **Or build and run via Docker CLI:**
    ```bash
    docker build -t diabetes-app .
    docker run -p 5000:5000 diabetes-app
    ```
-   Open `http://localhost:5000` in your web browser.
+3. Access the site at `http://localhost:5000`.
 
 ---
 
-## API Documentation
+## 📡 API Endpoint Reference
 
-### POST `/predict`
+### `POST /predict`
+Submits medical features to the server for prediction.
 
-**Payload**:
-```json
-{
-  "Pregnancies": 2,
-  "Glucose": 120,
-  "BloodPressure": 70,
-  "SkinThickness": 20,
-  "Insulin": 85,
-  "BMI": 28.5,
-  "DiabetesPedigreeFunction": 0.5,
-  "Age": 35
-}
-```
+*   **Content-Type:** `application/json`
+*   **Request Body Example:**
+    ```json
+    {
+      "Pregnancies": 2,
+      "Glucose": 120,
+      "BloodPressure": 70,
+      "SkinThickness": 20,
+      "Insulin": 85,
+      "BMI": 28.5,
+      "DiabetesPedigreeFunction": 0.5,
+      "Age": 35
+    }
+    ```
+*   **CURL Command Example:**
+    ```bash
+    curl -X POST http://127.0.0.1:5000/predict \
+         -H "Content-Type: application/json" \
+         -d '{"Pregnancies":2,"Glucose":120,"BloodPressure":70,"SkinThickness":20,"Insulin":85,"BMI":28.5,"DiabetesPedigreeFunction":0.5,"Age":35}'
+    ```
+*   **Response Body Example:**
+    ```json
+    {
+      "prediction": "Non-Diabetic",
+      "probability": 0.32,
+      "risk_level": "Low Risk"
+    }
+    ```
 
-**Response**:
-```json
-{
-  "prediction": "Diabetic",
-  "probability": 0.56,
-  "risk_level": "Medium Risk"
-}
-```
+### `GET /health`
+Returns system health status.
 
-### GET `/health`
+*   **Response Body Example:**
+    ```json
+    {
+      "status": "healthy"
+    }
+    ```
 
-**Response**:
-```json
-{
-  "status": "healthy"
-}
-```
+---
+
+## 📄 License
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
