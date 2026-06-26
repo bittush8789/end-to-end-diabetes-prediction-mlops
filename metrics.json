@@ -1,0 +1,8 @@
+{
+    "model_name": "Random Forest",
+    "Accuracy": 0.7468,
+    "Precision": 0.6596,
+    "Recall": 0.5741,
+    "F1 Score": 0.6139,
+    "ROC AUC": 0.8179
+}

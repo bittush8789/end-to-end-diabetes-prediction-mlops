@@ -1,0 +1,62 @@
+dataset_shape:
+- 768
+- 9
+datatype_validation:
+  Age:
+    actual: int64
+    expected: int64
+    status: Valid
+  BMI:
+    actual: float64
+    expected: float64
+    status: Valid
+  BloodPressure:
+    actual: int64
+    expected: int64
+    status: Valid
+  DiabetesPedigreeFunction:
+    actual: float64
+    expected: float64
+    status: Valid
+  Glucose:
+    actual: int64
+    expected: int64
+    status: Valid
+  Insulin:
+    actual: int64
+    expected: int64
+    status: Valid
+  Outcome:
+    actual: int64
+    expected: int64
+    status: Valid
+  Pregnancies:
+    actual: int64
+    expected: int64
+    status: Valid
+  SkinThickness:
+    actual: int64
+    expected: int64
+    status: Valid
+duplicate_records: 0
+null_values_count:
+  Age: 0
+  BMI: 0
+  BloodPressure: 0
+  DiabetesPedigreeFunction: 0
+  Glucose: 0
+  Insulin: 0
+  Outcome: 0
+  Pregnancies: 0
+  SkinThickness: 0
+overall_status: Passed
+schema_validation:
+  Age: Valid
+  BMI: Valid
+  BloodPressure: Valid
+  DiabetesPedigreeFunction: Valid
+  Glucose: Valid
+  Insulin: Valid
+  Outcome: Valid
+  Pregnancies: Valid
+  SkinThickness: Valid

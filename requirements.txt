@@ -1,4 +1,8 @@
-flask
+fastapi
+uvicorn
+pydantic
+prometheus-client
+pyyaml
 pandas
 numpy
 scikit-learn
@@ -7,3 +11,4 @@ joblib
 matplotlib
 seaborn
 gunicorn
+dvc

@@ -1,0 +1,55 @@
+stages:
+  data_ingestion:
+    cmd: python -m src.pipeline.training_pipeline --stage ingestion
+    deps:
+      - src/components/data_ingestion.py
+      - src/pipeline/training_pipeline.py
+    params:
+      - data
+      - train_test_split
+    outs:
+      - artifacts/raw.csv
+      - artifacts/train.csv
+      - artifacts/test.csv
+
+  data_validation:
+    cmd: python -m src.pipeline.training_pipeline --stage validation
+    deps:
+      - artifacts/raw.csv
+      - src/components/data_validation.py
+      - src/pipeline/training_pipeline.py
+    outs:
+      - validation_report.yaml
+
+  data_transformation:
+    cmd: python -m src.pipeline.training_pipeline --stage transformation
+    deps:
+      - artifacts/train.csv
+      - artifacts/test.csv
+      - src/components/data_transformation.py
+      - src/pipeline/training_pipeline.py
+    params:
+      - imputation
+    outs:
+      - artifacts/preprocessor.pkl
+
+  model_trainer:
+    cmd: python -m src.pipeline.training_pipeline --stage training
+    deps:
+      - artifacts/preprocessor.pkl
+      - src/components/model_trainer.py
+      - src/pipeline/training_pipeline.py
+    params:
+      - models
+    outs:
+      - models/diabetes_model.pkl
+
+  model_evaluation:
+    cmd: python -m src.pipeline.training_pipeline --stage evaluation
+    deps:
+      - models/diabetes_model.pkl
+      - src/components/model_evaluation.py
+      - src/pipeline/training_pipeline.py
+    metrics:
+      - metrics.json:
+          cache: false

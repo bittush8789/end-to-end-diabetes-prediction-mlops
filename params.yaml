@@ -1,0 +1,28 @@
+data:
+  url: "https://raw.githubusercontent.com/npradaschnor/Pima-Indians-Diabetes-Dataset/master/diabetes.csv"
+  raw_path: "artifacts/raw.csv"
+  train_path: "artifacts/train.csv"
+  test_path: "artifacts/test.csv"
+
+train_test_split:
+  test_size: 0.20
+  random_state: 42
+
+imputation:
+  cols:
+    - Glucose
+    - BloodPressure
+    - SkinThickness
+    - Insulin
+    - BMI
+
+models:
+  logistic_regression:
+    max_iter: 1000
+    random_state: 42
+  random_forest:
+    n_estimators: 150
+    random_state: 42
+  xgboost:
+    eval_metric: "logloss"
+    random_state: 42

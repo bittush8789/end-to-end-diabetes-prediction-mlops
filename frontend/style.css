@@ -19,7 +19,6 @@
     --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark Mode Overrides */
 @media (prefers-color-scheme: dark) {
     :root {
         --bg-primary: #0f172a;
@@ -51,7 +50,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Glassmorphism Background Shapes */
 .bg-blobs {
     position: fixed;
     top: 0;
@@ -92,7 +90,6 @@ body {
     100% { transform: translate(5%, 5%) scale(1.1); }
 }
 
-/* Header & Navigation */
 header {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -144,7 +141,6 @@ header {
     background-color: rgba(13, 148, 136, 0.1);
 }
 
-/* Hero Section */
 .hero {
     text-align: center;
     padding: 4rem 2rem 2rem 2rem;
@@ -167,7 +163,6 @@ header {
     margin-bottom: 2rem;
 }
 
-/* Call to Action Button */
 .cta-btn {
     display: inline-flex;
     align-items: center;
@@ -187,7 +182,6 @@ header {
     box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
 }
 
-/* Grid Layout & Containers */
 main {
     flex: 1;
     max-width: 1200px;
@@ -203,7 +197,6 @@ main {
     margin-top: 2rem;
 }
 
-/* Cards styling */
 .glass-card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -230,7 +223,6 @@ main {
     color: var(--primary-light);
 }
 
-/* Awareness / Stats */
 .stat-box {
     text-align: center;
     padding: 1.5rem;
@@ -251,7 +243,6 @@ main {
     color: var(--text-secondary);
 }
 
-/* Form Styles */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -298,7 +289,6 @@ main {
     margin-top: 0.25rem;
 }
 
-/* Buttons */
 .btn-container {
     display: flex;
     gap: 1rem;
@@ -335,7 +325,6 @@ main {
     background: rgba(148, 163, 184, 0.3);
 }
 
-/* Spinner */
 .spinner-container {
     display: none;
     flex-direction: column;
@@ -359,7 +348,6 @@ main {
     100% { transform: rotate(360deg); }
 }
 
-/* Results Display */
 .result-card {
     display: none;
     margin-top: 2rem;
@@ -444,7 +432,6 @@ main {
     font-weight: 600;
 }
 
-/* About / Metrics Styling */
 .metrics-table {
     width: 100%;
     border-collapse: collapse;
@@ -466,7 +453,6 @@ main {
     background: rgba(13, 148, 136, 0.02);
 }
 
-/* Footer */
 footer {
     text-align: center;
     padding: 2rem;
@@ -476,7 +462,6 @@ footer {
     margin-top: auto;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;

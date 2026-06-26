@@ -1,0 +1,22 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "diabetes-predictor"
+  namespace: "diabetes-prediction"
+  labels:
+    app: "diabetes-predictor"
+    version: "v2.0.0"
+spec:
+  predictor:
+    serviceAccountName: "diabetes-sa"
+    model:
+      modelFormat:
+        name: sklearn
+      storageUri: "s3://diabetes-model-bucket/models/"
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: "500m"
+          memory: 1Gi

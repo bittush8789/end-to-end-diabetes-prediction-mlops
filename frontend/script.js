@@ -20,11 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Clear previous results and error messages
             resultCard.style.display = 'none';
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             
-            // Get form data
             const formData = new FormData(form);
             const data = {};
             let hasErrors = false;
@@ -32,8 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const [key, value] of formData.entries()) {
                 const numVal = parseFloat(value);
                 const limit = limits[key];
-                
-                // Client-side validations
                 const inputElement = document.getElementById(key);
                 
                 if (value.trim() === '') {
@@ -54,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (hasErrors) {
-                // Scroll to first error
                 const firstError = document.querySelector('.error-message');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Show loading spinner
             spinnerContainer.style.display = 'flex';
             spinnerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -79,10 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 spinnerContainer.style.display = 'none';
 
                 if (!response.ok) {
-                    throw new Error(result.error || 'Server error occurred');
+                    throw new Error(result.detail || 'Inference failed');
                 }
 
-                // Render result card details
                 displayResults(result, data);
 
             } catch (err) {
@@ -117,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const progressBar = document.getElementById('res-progress-bar');
         const tipsEl = document.getElementById('res-tips');
 
-        // Set prediction text and styling
         statusEl.textContent = res.prediction;
         if (res.prediction === 'Diabetic') {
             statusEl.className = 'result-status diabetic';
@@ -125,45 +117,52 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.className = 'result-status non-diabetic';
         }
 
-        // Set probability and risk level
         const percentage = (res.probability * 100).toFixed(1);
         probEl.textContent = `${percentage}%`;
-        riskEl.textContent = res.risk_level;
 
-        // Set progress bar
+        // Classification risk level
+        let riskLevel = 'Low Risk';
+        if (res.probability >= 0.40 && res.probability <= 0.70) {
+            riskLevel = 'Medium Risk';
+        } else if (res.probability > 0.70) {
+            riskLevel = 'High Risk';
+        }
+        
+        riskEl.textContent = riskLevel;
+
         progressBar.style.width = `${percentage}%`;
-        progressBar.className = 'progress-bar'; // reset classes
-        if (res.risk_level === 'Low Risk') {
+        progressBar.className = 'progress-bar';
+        if (riskLevel === 'Low Risk') {
             progressBar.classList.add('low-risk');
-        } else if (res.risk_level === 'Medium Risk') {
+            riskEl.style.color = 'var(--success)';
+        } else if (riskLevel === 'Medium Risk') {
             progressBar.classList.add('medium-risk');
+            riskEl.style.color = 'var(--warning)';
         } else {
             progressBar.classList.add('high-risk');
+            riskEl.style.color = 'var(--danger)';
         }
 
-        // Generate customized suggestions
         let tipsHtml = '';
         if (res.prediction === 'Diabetic') {
-            tipsHtml += '<li><strong>Consult a Physician:</strong> Schedule an appointment with an endocrinologist or primary care physician for a formal diagnostic evaluation.</li>';
+            tipsHtml += '<li><strong>Physician Consult Required:</strong> Make an appointment with a doctor for checkups.</li>';
         } else {
-            tipsHtml += '<li><strong>Maintain a Balanced Diet:</strong> Keep eating nutrient-dense foods, rich in fiber and low in refined sugars.</li>';
+            tipsHtml += '<li><strong>Healthy Diet:</strong> Maintain intake of dietary fiber and slow-release carbohydrates.</li>';
         }
 
         if (inputData.BMI > 25) {
-            tipsHtml += `<li><strong>Manage Weight (BMI: ${inputData.BMI}):</strong> Incorporate physical activities to help reduce BMI toward the normal range (18.5 - 24.9).</li>`;
+            tipsHtml += `<li><strong>Active Lifestyle (BMI: ${inputData.BMI}):</strong> Work towards reducing weight through active workouts.</li>`;
         }
         if (inputData.Glucose > 140) {
-            tipsHtml += `<li><strong>Monitor Glucose (Glucose: ${inputData.Glucose} mg/dL):</strong> High plasma glucose is a strong indicator. Try reducing carbohydrate intake and re-testing regularly.</li>`;
+            tipsHtml += `<li><strong>Dietary Control (Glucose: ${inputData.Glucose} mg/dL):</strong> Avoid sugars and check glucose levels regularly.</li>`;
         }
         if (inputData.BloodPressure > 80) {
-            tipsHtml += `<li><strong>Cardiovascular Health (BP: ${inputData.BloodPressure} mmHg):</strong> Track your blood pressure regularly. Reduce sodium intake and engage in aerobic exercises.</li>`;
+            tipsHtml += `<li><strong>Hypertension Warning (BP: ${inputData.BloodPressure} mmHg):</strong> Reduce sodium and track diastolic pressures.</li>`;
         }
         
-        tipsHtml += '<li><strong>Regular Screening:</strong> Maintain annual physicals and routine blood checks, particularly if you have family history.</li>';
-        
+        tipsHtml += '<li><strong>Routine Diagnostics:</strong> Test blood glucose levels annually to track any progression.</li>';
         tipsEl.innerHTML = tipsHtml;
 
-        // Display the card and scroll to it
         resultCard.style.display = 'block';
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
