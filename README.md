@@ -2,6 +2,8 @@
 
 DiaPredict is an end-to-end Machine Learning web application designed to predict whether a patient has diabetes based on medical parameters from the Pima Indians Diabetes Dataset. The model achieves an ROC-AUC of **81.8%** using a Random Forest classifier.
 
+![DiaPredict Dashboard](photo/image.png)
+
 ---
 
 ## Project Structure
